@@ -1,0 +1,16 @@
+apiVersion: cert-manager.io/v1alpha2
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-production
+  namespace: cert-manager
+spec:
+  acme:
+    email: jefferson@molengeek.com
+    server: https://acme-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: letsencrypt-production
+    solvers:
+      - selector: {}
+        http01:
+          ingress:
+            class: nginx

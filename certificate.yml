@@ -1,0 +1,20 @@
+apiVersion: cert-manager.io/v1alpha2
+kind: Certificate
+metadata:
+  name: molengeek-com
+  namespace: molengeek
+spec:
+  secretName: molengeek-crt-secret
+  dnsNames:
+  - molengeek.com
+  - www.molengeek.com
+  acme:
+    config:
+    - http01:
+        ingressClass: nginx
+      domains:
+      - molengeek.com
+      - www.molengeek.com
+  issuerRef:
+    name: letsencrypt-production
+    kind: ClusterIssuer

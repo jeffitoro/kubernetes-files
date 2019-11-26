@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: site1-deployment
+  labels:
+    app: site1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: site1
+  template:
+    metadata:
+      labels:
+        app: site1
+    spec:
+      containers:
+        - name: app1
+          image: wordpress:5.2
+          ports:
+            - containerPort: 80
+          # ici c'est intéressant pour le disk persistant
+          env:
+            - name: WORDPRESS_DB_HOST
+              value: 10.0.0.25:3306
+            - name: WORDPRESS_DB_USER
+              value: root
+            - name: WORDPRESS_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: myblog-secrets
+                  key: wordpress_db_password
+          volumeMounts:
+            - mountPath: "/var/www/wp-content"
+              name: wpcontent
+      volumes:
+        - name: wpcontent
+          persistentVolumeClaim:
+            claimName: wp-pv-claim
